@@ -1,0 +1,21 @@
+{
+  "name": "react-express-mongo-ts-boilerplate-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root workspace that coordinates the client and server apps",
+  "scripts": {
+    "install:client": "npm install --prefix client",
+    "install:server": "npm install --prefix server",
+    "install:all": "npm run install:client && npm run install:server",
+    "start:client": "cross-env NODE_OPTIONS=--openssl-legacy-provider npm start --prefix client",
+    "start:server": "npm run start:dev --prefix server",
+    "dev": "concurrently -n client,server -c blue,green \"npm run start:client\" \"npm run start:server\"",
+    "build:client": "npm run build --prefix client",
+    "build:server": "npm run build --prefix server",
+    "build": "npm run build:client && npm run build:server"
+  },
+  "devDependencies": {
+    "concurrently": "^6.5.1",
+    "cross-env": "^7.0.3"
+  }
+}
