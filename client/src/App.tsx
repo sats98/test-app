@@ -9,6 +9,7 @@ import ContentWrapper from './components/content-wrapper';
 import GlobalStyles from './components/global-styles';
 import ProtectedRoute from './components/protected-route';
 import { useStores } from './store';
+import GithubCallback from './views/github-callback';
 import Home from './views/home';
 import Login from './views/login';
 import Register from './views/register';
@@ -35,6 +36,9 @@ function App() {
             </Route>
             <Route path='/register'>
               <Register />
+            </Route>
+            <Route path='/auth/github/callback'>
+              <GithubCallback />
             </Route>
             <ContentWrapper>
               <ProtectedRoute path='/' component={Home} />

@@ -12,5 +12,8 @@ export const useStyles = makeStyles((theme) =>
       marginBottom: theme.spacing(2),
       textTransform: 'uppercase'
     },
+    divider: {
+      margin: theme.spacing(3, 0),
+    },
   })
 );

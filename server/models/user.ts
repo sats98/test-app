@@ -8,7 +8,11 @@ import bcrypt from 'bcryptjs';
  */
 export interface IUser extends Document {
   username: string;
-  password: string;
+  password?: string;
+  email?: string;
+  githubId?: string;
+  authProvider?: 'local' | 'github';
+  comparePassword: (candidatePassword: string, callback: any) => void;
 }
 
 const userSchema: Schema = new Schema({
@@ -19,7 +23,21 @@ const userSchema: Schema = new Schema({
   },
   password: {
     type: String,
-    required: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  githubId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'github'],
+    default: 'local',
   },
   date: {
     type: Date,
@@ -30,11 +48,15 @@ const userSchema: Schema = new Schema({
 userSchema.pre<IUser>('save', function save(next) {
   const user = this;
 
+  if (!user.isModified('password') || !user.password) {
+    return next();
+  }
+
   bcrypt.genSalt(10, (err, salt) => {
     if (err) {
       return next(err);
     }
-    bcrypt.hash(this.password, salt, (err, hash) => {
+    bcrypt.hash(this.password as string, salt, (err, hash) => {
       if (err) {
         return next(err);
       }

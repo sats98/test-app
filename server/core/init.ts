@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { Express } from 'express';
 import mongoose from 'mongoose';
@@ -7,7 +8,8 @@ import config from '../config/config';
 import { isProduction } from '../utils';
 
 export const initMiddleware = (app: Express) => {
-  app.use(cors());
+  app.use(cors({ origin: config.clientUrl, credentials: true }));
+  app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 };

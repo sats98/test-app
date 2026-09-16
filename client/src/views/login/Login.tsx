@@ -1,4 +1,4 @@
-import { Button, Grid, Paper, Typography } from '@material-ui/core';
+import { Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { Form, Formik } from 'formik';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -54,6 +54,15 @@ const Login: React.FC = () => {
               </Button>
             </Form>
           </Formik>
+          <Divider className={classes.divider} />
+          <Button
+            type='button'
+            fullWidth
+            variant='outlined'
+            onClick={() => authStore.loginWithGithub()}
+          >
+            {t('label.loginWithGithub')}
+          </Button>
         </Grid>
       </Paper>
     </PublicWrapper>

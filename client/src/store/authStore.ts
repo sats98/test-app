@@ -1,7 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { action, observable } from 'mobx';
 import { persist } from 'mobx-persist';
-import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import IAuthResponse from '../interfaces/auth-response';
 import IUser from '../interfaces/user';
 import authService from '../services/auth.service';
@@ -26,7 +27,33 @@ export class AuthStore extends StoreBase {
     );
   };
 
+  @action.bound loginWithGithub = () => {
+    fromStream(
+      authService.getGithubAuthorizeUrl().pipe(
+        map((res) => {
+          window.location.href = res.data.url;
+        })
+      )
+    );
+  };
+
+  @action.bound handleGithubCallback = (code: string, state: string) => {
+    fromStream(
+      authService.githubCallback(code, state).pipe(
+        map((res) => {
+          this.setJwtToken(res.data.accessToken);
+          this.rootStore.routerStore.redirect('/');
+        }),
+        catchError(() => {
+          this.rootStore.routerStore.redirect('/login');
+          return of(undefined);
+        })
+      )
+    );
+  };
+
   @action.bound logout = () => {
+    authService.logout().subscribe();
     this.setJwtToken(undefined);
     this.rootStore.routerStore.redirect('/login');
   };
